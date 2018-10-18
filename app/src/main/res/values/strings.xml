@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DaeguBank</string>
+    <string name="text_content_hint">Content</string>
+    <string name="image_qr">QR Code</string>
+    <string name="button_create">Create QR Code</string>
+    <string name="button_read">Read QR Code</string>
+</resources>
