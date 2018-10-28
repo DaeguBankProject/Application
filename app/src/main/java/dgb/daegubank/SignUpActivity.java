@@ -1,15 +1,16 @@
 package dgb.daegubank;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -24,12 +26,15 @@ import java.net.URL;
  * Created by machina on 28/10/2018.
  */
 
-public class LogInActivity extends AppCompatActivity{
-    private Button signUpButton;
-    private Button signInButton;
+public class SignUpActivity extends AppCompatActivity{
+    private EditText editID;
+    private EditText editPWD;
+    private EditText editPWDcheck;
+    private EditText editName;
+    private Spinner userTypeSpinner;
 
-    private EditText eIdText;
-    private EditText ePwdText;
+    private Button completeButton;
+    private Button cancelButton;
 
     private static String IP_ADDRESS = "192.168.0.4";
     private HttpURLConnection serverConnection;
@@ -37,44 +42,57 @@ public class LogInActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.log_in);
+        setContentView(R.layout.sign_up);
 
-        signInButton = (Button)findViewById(R.id.SignInBtn);
-        signUpButton = (Button)findViewById(R.id.SignUpBtn);
+        editID = (EditText)findViewById(R.id.inputID);
+        editPWD = (EditText)findViewById(R.id.inputPwd);
+        editPWDcheck = (EditText)findViewById(R.id.inputPwdCheck);
+        editName = (EditText)findViewById(R.id.inputName);
 
-        eIdText = (EditText)findViewById(R.id.editId);
-        ePwdText = (EditText)findViewById(R.id.editPwd);
+        completeButton  = (Button)findViewById(R.id.completeBtn);
+        cancelButton = (Button)findViewById(R.id.cancelBtn);
 
-        signUpButton.setOnClickListener(new Button.OnClickListener(){
+        userTypeSpinner = (Spinner)findViewById(R.id.inputType);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.user_type,
+                android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userTypeSpinner.setAdapter(adapter);
 
+        completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signUpIntemt = new Intent(LogInActivity.this, SignUpActivity.class);
-                startActivity(signUpIntemt);
+                String idStr = editID.getText().toString();
+                String pwdStr = editPWD.getText().toString();
+                String pwdStrCheck = editPWDcheck.getText().toString();
+                String nameStr = editName.getText().toString();
+                String userTypeStr = userTypeSpinner.getSelectedItem().toString();
+
+                if(pwdStr.equals(pwdStrCheck)){
+                    sendSignUpInfo task = new sendSignUpInfo();
+                    task.execute("http://" + IP_ADDRESS + "/Test/Server/server.php", idStr, pwdStr, nameStr, userTypeStr);
+                }else{
+                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT);
+                }
             }
         });
 
-        signInButton.setOnClickListener(new View.OnClickListener(){
+        cancelButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String idStr = eIdText.getText().toString();
-                String pwdStr = ePwdText.getText().toString();
-
-                sendSignInInfo task = new sendSignInInfo();
-                task.execute("http://" + IP_ADDRESS + "/Test/Server/server.php", idStr, pwdStr);
 
             }
         });
     }
 
-    class sendSignInInfo extends AsyncTask<String, Void, String>{
+    class sendSignUpInfo extends AsyncTask<String, Void, String>{
+
         ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(LogInActivity.this, "접속 중..", null, true, true);
+            progressDialog = ProgressDialog.show(SignUpActivity.this, "회원 등록 중...", null, true, true);
         }
 
         @Override
@@ -82,13 +100,15 @@ public class LogInActivity extends AppCompatActivity{
             super.onPostExecute(s);
 
             progressDialog.dismiss();
-            Toast.makeText(LogInActivity.this, s, Toast.LENGTH_SHORT);
+            Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT);
         }
 
         @Override
         protected String doInBackground(String... strings) {
             String strID = (String)strings[1];
             String strPWD = (String)strings[2];
+            String strName = (String)strings[3];
+            int strUserType = strings[4].equals("상인")? 1 : 0;
 
             String severalURL = (String)strings[0];
 
@@ -102,9 +122,11 @@ public class LogInActivity extends AppCompatActivity{
                 serverConnection.setRequestMethod("POST");
 
                 JSONObject requestObject = new JSONObject();
-                requestObject.put("request", "sign_in");
+                requestObject.put("request", "sign_up");
                 requestObject.put("id", strID);
-                requestObject.put("pwd", strPWD);
+                requestObject.put("password", strPWD);
+                requestObject.put("name", strName);
+                requestObject.put("type", strUserType);
 
                 byte[] postDataBytes = requestObject.toString().getBytes("UTF-8");
 
@@ -139,19 +161,4 @@ public class LogInActivity extends AppCompatActivity{
             }
         }
     }
-
-    /*
-        HttpURLConnection serverConnection;
-        serverConnection = .........;
-        JSONObject requestObject = new JSONObject();
-        requestObject.put("type", "sign_in");
-        requestObject.put("id", $(DATA));
-        ...
-        byte[] postDataBytes = requestObject.toString().getBytes(NetworkInterface.ENCODE);
-        ...
-        serverConnection.setRequestMethod("POST");
-        serverConnection.setRequestProperty("Content-Type", "application/json");
-        serverConnection.SetDoOutput(true);
-        serverConnection.getOutputStream().write(postDataBytes);
-    */
 }

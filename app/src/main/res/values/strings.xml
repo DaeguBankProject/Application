@@ -4,4 +4,9 @@
     <string name="image_qr">QR Code</string>
     <string name="button_create">Create QR Code</string>
     <string name="button_read">Read QR Code</string>
+
+    <string-array name="user_type">
+        <item>상인</item>
+        <item>고객</item>
+    </string-array>
 </resources>
