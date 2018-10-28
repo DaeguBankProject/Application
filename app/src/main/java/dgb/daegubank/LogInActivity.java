@@ -1,17 +1,38 @@
 package dgb.daegubank;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by machina on 28/10/2018.
  */
 
 public class LogInActivity extends AppCompatActivity{
-    Button signUpButton;
-    Button signInButton;
+    private Button signUpButton;
+    private Button signInButton;
+
+    private EditText eIdText;
+    private EditText ePwdText;
+
+    private static String IP_ADDRESS = "192.168.0.4";
+    private HttpURLConnection serverConnection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,6 +41,102 @@ public class LogInActivity extends AppCompatActivity{
 
         signInButton = (Button)findViewById(R.id.SignInBtn);
         signUpButton = (Button)findViewById(R.id.SignUpBtn);
+
+        eIdText = (EditText)findViewById(R.id.editId);
+        ePwdText = (EditText)findViewById(R.id.editPwd);
+
+//        signUpButton.setOnClickListener(new Button.OnClickListener(){
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
+        signInButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String idStr = eIdText.getText().toString();
+                String pwdStr = ePwdText.getText().toString();
+
+                sendSignInInfo task = new sendSignInInfo();
+                task.execute("http://" + IP_ADDRESS + "/Test/Server/server.php", idStr, pwdStr);
+
+            }
+        });
+    }
+
+    class sendSignInInfo extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(LogInActivity.this, "접속 중..", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            progressDialog.dismiss();
+            Toast.makeText(LogInActivity.this, s, Toast.LENGTH_SHORT);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String strID = (String)strings[1];
+            String strPWD = (String)strings[2];
+
+            String severalURL = (String)strings[0];
+
+
+            try{
+                URL url = new URL(severalURL);
+
+                serverConnection = (HttpURLConnection)url.openConnection();
+                serverConnection.setRequestProperty("Content-Type", "application/json");
+
+                serverConnection.setRequestMethod("POST");
+
+                JSONObject requestObject = new JSONObject();
+                requestObject.put("request", "sign_in");
+                requestObject.put("id", strID);
+                requestObject.put("pwd", strPWD);
+
+                byte[] postDataBytes = requestObject.toString().getBytes("UTF-8");
+
+                serverConnection.setDoOutput(true);
+                serverConnection.getOutputStream().write(postDataBytes);
+
+                int responseStatusCode = serverConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK){
+                    inputStream = serverConnection.getInputStream();
+                }else{
+                    inputStream = serverConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+                Log.e("Request", sb.toString());
+                return sb.toString();
+            }catch (Exception e){
+                return new String("Error: " + e.getMessage());
+            }
+        }
     }
 
     /*

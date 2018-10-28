@@ -31,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+                startActivity(intent);
+            }
+        });
         btnCreateQR = (Button)findViewById(R.id.btnCreateQR);
         btnReadQR = (Button)findViewById(R.id.btnReadQR);
         txtContent = (EditText)findViewById(R.id.txtContent);
