@@ -20,6 +20,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by machina on 28/10/2018.
@@ -62,11 +65,27 @@ public class SignUpActivity extends AppCompatActivity{
             public void onClick(View v) {
                 String idStr = editID.getText().toString();
                 String pwdStr = editPWD.getText().toString();
+
                 String pwdStrCheck = editPWDcheck.getText().toString();
                 String nameStr = editName.getText().toString();
                 String userTypeStr = userTypeSpinner.getSelectedItem().toString();
 
-                if(pwdStr.equals(pwdStrCheck)){
+                if(!idStr.equals("") && !nameStr.equals("") && pwdStr.equals(pwdStrCheck)){
+                    try {
+                        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                        String strPassword = editPWD.getText().toString();
+                        digest.update(strPassword.getBytes(Charset.forName("UTF-8")));
+                        byte[] password = digest.digest();
+                        StringBuffer buffer = new StringBuffer();
+                        for(int i = 0; i < password.length; i++){
+                            buffer.append(Integer.toString((password[i]&0xff) + 0x100, 1).substring(1));
+                        }
+                        pwdStr = buffer.toString();
+                    }
+                    catch(NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                     sendSignUpInfo task = new sendSignUpInfo();
                     task.execute(SERVER_ADDRESS, idStr, pwdStr, nameStr, userTypeStr);
                 }else{
