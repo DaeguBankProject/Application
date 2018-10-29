@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -36,7 +35,7 @@ public class SignUpActivity extends AppCompatActivity{
     private Button completeButton;
     private Button cancelButton;
 
-    private static String IP_ADDRESS = "192.168.0.4";
+    private static final String SERVER_ADDRESS = "http://capstone.gonetis.com/daegubank/server.php";
     private HttpURLConnection serverConnection;
 
     @Override
@@ -69,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity{
 
                 if(pwdStr.equals(pwdStrCheck)){
                     sendSignUpInfo task = new sendSignUpInfo();
-                    task.execute("http://" + IP_ADDRESS + "/Test/Server/server.php", idStr, pwdStr, nameStr, userTypeStr);
+                    task.execute(SERVER_ADDRESS, idStr, pwdStr, nameStr, userTypeStr);
                 }else{
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT);
                 }
@@ -100,7 +99,9 @@ public class SignUpActivity extends AppCompatActivity{
             super.onPostExecute(s);
 
             progressDialog.dismiss();
-            Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT);
+
+//            finish();
+            Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT).show();
         }
 
         @Override

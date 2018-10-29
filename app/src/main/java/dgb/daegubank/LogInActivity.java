@@ -34,7 +34,7 @@ public class LogInActivity extends AppCompatActivity{
     private EditText eIdText;
     private EditText ePwdText;
 
-    private static String IP_ADDRESS = "192.168.0.4";
+    private static final String SERVER_ADDRESS = "http://capstone.gonetis.com/daegubank/server.php";
     private HttpURLConnection serverConnection;
 
     @Override
@@ -79,7 +79,7 @@ public class LogInActivity extends AppCompatActivity{
                 }
 
                 sendSignInInfo task = new sendSignInInfo();
-                task.execute("http://" + IP_ADDRESS + "/Test/Server/server.php", idStr, pwdStr);
+                task.execute(SERVER_ADDRESS, idStr, pwdStr);
 
             }
         });
@@ -98,6 +98,15 @@ public class LogInActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            try{
+                JSONObject result = new JSONObject(s);
+                String message = result.getString("message");
+
+                Toast.makeText(LogInActivity.this, message, Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+
+            }
 
             progressDialog.dismiss();
         }

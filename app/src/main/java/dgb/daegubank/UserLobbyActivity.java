@@ -23,16 +23,10 @@ import java.net.URL;
 public class UserLobbyActivity extends AppCompatActivity{
     private TextView userText;
 
-    private static String IP_ADDRESS = "192.168.0.4";
-    private HttpURLConnection serverConnection;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_lobby);
-
-        loadUserData task = new loadUserData();
-        task.execute("http://" + IP_ADDRESS + "/Test/Server/server.php");
 
         userText = (TextView)findViewById(R.id.userName);
 
