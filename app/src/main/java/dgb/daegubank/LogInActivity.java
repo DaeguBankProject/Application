@@ -82,7 +82,6 @@ public class LogInActivity extends AppCompatActivity{
             super.onPostExecute(s);
 
             progressDialog.dismiss();
-            Toast.makeText(LogInActivity.this, s, Toast.LENGTH_SHORT);
         }
 
         @Override
@@ -91,7 +90,6 @@ public class LogInActivity extends AppCompatActivity{
             String strPWD = (String)strings[2];
 
             String severalURL = (String)strings[0];
-
 
             try{
                 URL url = new URL(severalURL);
