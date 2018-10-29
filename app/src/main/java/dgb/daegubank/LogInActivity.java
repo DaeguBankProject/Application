@@ -80,7 +80,6 @@ public class LogInActivity extends AppCompatActivity{
 
                 sendSignInInfo task = new sendSignInInfo();
                 task.execute(SERVER_ADDRESS, idStr, pwdStr);
-
             }
         });
     }
@@ -98,17 +97,31 @@ public class LogInActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            progressDialog.dismiss();
 
             try{
                 JSONObject result = new JSONObject(s);
-                String message = result.getString("message");
+                String respondMsg = result.getString("respond"); //"Error" or "Success"
 
-                Toast.makeText(LogInActivity.this, message, Toast.LENGTH_SHORT).show();
+                if(respondMsg.equals("Success")){
+                    String userName = result.getString("name"); // User's name
+                    String userType = result.getString("type"); // User's type (상인 or 고객)
+                    String userAccount = result.getString("account"); // User's bank account
+
+                    Intent goLobbyIntent = new Intent(LogInActivity.this, UserLobbyActivity.class);
+                    goLobbyIntent.putExtra("user_name", userName);
+                    goLobbyIntent.putExtra("user_type", userType);
+                    goLobbyIntent.putExtra("user_account", userAccount);
+                    startActivity(goLobbyIntent);
+                }else{
+                    Toast.makeText(LogInActivity.this, result.getString("message"), Toast.LENGTH_LONG).show();
+                }
+
+                Toast.makeText(LogInActivity.this, respondMsg, Toast.LENGTH_LONG).show();
+
             }catch (Exception e){
 
             }
-
-            progressDialog.dismiss();
         }
 
         @Override

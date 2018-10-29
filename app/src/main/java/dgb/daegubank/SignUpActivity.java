@@ -78,7 +78,7 @@ public class SignUpActivity extends AppCompatActivity{
         cancelButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
+                finish();
             }
         });
     }
@@ -100,7 +100,22 @@ public class SignUpActivity extends AppCompatActivity{
 
             progressDialog.dismiss();
 
-//            finish();
+            try{
+                JSONObject result = new JSONObject(s);
+                String respondMsg = result.getString("respond");
+                String resultMsg = result.getString("message");
+
+                if(respondMsg.equals("Success")){
+                    Toast.makeText(getApplicationContext(), "가입 성공", Toast.LENGTH_LONG).show();
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), resultMsg, Toast.LENGTH_LONG).show();
+                }
+            }catch (Exception e){
+
+            }
+
+            finish();
             Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT).show();
         }
 
