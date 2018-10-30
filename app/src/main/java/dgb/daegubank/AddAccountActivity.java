@@ -1,5 +1,6 @@
 package dgb.daegubank;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,74 +25,89 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by machina on 28/10/2018.
+ * Created by machina on 30/10/2018.
  */
 
-public class LogInActivity extends AppCompatActivity{
-    private Button signUpButton;
-    private Button signInButton;
-
-    private EditText eIdText;
-    private EditText ePwdText;
-
+public class AddAccountActivity extends AppCompatActivity{
     private static final String SERVER_ADDRESS = "http://capstone.gonetis.com/daegubank/server.php";
     private HttpURLConnection serverConnection;
+
+    private EditText editAccount;
+    private EditText editPin;
+    private EditText editPinCheck;
+
+    private Button okBtn;
+    private Button cancelBtn;
+
+    private String userId;
+    private String userAccount;
+    private String pinNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.log_in);
+        setContentView(R.layout.add_account);
 
-        signInButton = (Button)findViewById(R.id.SignInBtn);
-        signUpButton = (Button)findViewById(R.id.SignUpBtn);
+        Intent fromLobby = new Intent(this.getIntent());
+        userId = fromLobby.getStringExtra("userId");
 
-        eIdText = (EditText)findViewById(R.id.editId);
-        ePwdText = (EditText)findViewById(R.id.editPwd);
+        editAccount = (EditText)findViewById(R.id.editAccount);
+        editPin = (EditText)findViewById(R.id.editPin);
+        editPinCheck = (EditText)findViewById(R.id.editPinCheck);
 
-        signUpButton.setOnClickListener(new Button.OnClickListener(){
+        okBtn = (Button)findViewById(R.id.okBtn);
+        cancelBtn = (Button)findViewById(R.id.accountCancelBtn);
 
+        okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signUpIntent = new Intent(LogInActivity.this, SignUpActivity.class);
-                startActivity(signUpIntent);
+                String idStr = userId;
+                String accountStr = editAccount.getText().toString();
+                String pinStr = editPin.getText().toString();
+                String pinStrCheck = editPinCheck.getText().toString();
+
+                if(!accountStr.equals("") && !pinStr.equals("") && pinStr.equals(pinStrCheck)){
+                    try {
+                        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                        String strPassword = editPin.getText().toString();
+                        digest.update(strPassword.getBytes(Charset.forName("UTF-8")));
+                        byte[] password = digest.digest();
+                        StringBuffer buffer = new StringBuffer();
+                        for(int i = 0; i < password.length; i++){
+                            buffer.append(Integer.toString((password[i]&0xff) + 0x100, 1).substring(1));
+                        }
+                        pinStr = buffer.toString();
+                    }
+                    catch(NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    AccountInfo task = new AccountInfo();
+                    task.execute(SERVER_ADDRESS, idStr, accountStr, pinStr);
+                }else{
+                    Toast.makeText(getApplicationContext(), "PIN번호가 일치하지 않습니다.", Toast.LENGTH_SHORT);
+                }
             }
         });
 
-        signInButton.setOnClickListener(new View.OnClickListener(){
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String idStr = eIdText.getText().toString();
-                String pwdStr;
-                try {
-                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                    String strPassword = ePwdText.getText().toString();
-                    digest.update(strPassword.getBytes(Charset.forName("UTF-8")));
-                    byte[] password = digest.digest();
-                    StringBuffer buffer = new StringBuffer();
-                    for(int i = 0; i < password.length; i++){
-                        buffer.append(Integer.toString((password[i]&0xff) + 0x100, 1).substring(1));
-                    }
-                    pwdStr = buffer.toString();
-                }
-                catch(NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                sendSignInInfo task = new sendSignInInfo();
-                task.execute(SERVER_ADDRESS, idStr, pwdStr);
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, returnIntent);
+                finish();
             }
         });
     }
 
-    class sendSignInInfo extends AsyncTask<String, Void, String>{
+    class AccountInfo extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(LogInActivity.this, "접속 중..", null, true, true);
+            progressDialog = ProgressDialog.show(AddAccountActivity.this, "등록 중..", null, true, true);
         }
 
         @Override
@@ -104,33 +120,31 @@ public class LogInActivity extends AppCompatActivity{
                 String respondMsg = result.getString("respond"); //"Error" or "Success"
 
                 if(respondMsg.equals("Success")){
-                    String userId = result.getString("id"); //User's ID
-                    String userName = result.getString("name"); // User's name
-                    String userType = result.getString("type"); // User's type (상인 or 고객)
                     String userAccount = result.getString("account"); // User's bank account
 
-                    Intent goLobbyIntent = new Intent(LogInActivity.this, UserLobbyActivity.class);
-                    goLobbyIntent.putExtra("user_id", userId);
-                    goLobbyIntent.putExtra("user_name", userName);
-                    goLobbyIntent.putExtra("user_type", userType);
-                    goLobbyIntent.putExtra("user_account", userAccount);
-                    startActivity(goLobbyIntent);
-                }else{
-                    Toast.makeText(LogInActivity.this, result.getString("message"), Toast.LENGTH_LONG).show();
-                }
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("account", userAccount);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
 
-                Toast.makeText(LogInActivity.this, respondMsg, Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+                }
 
             }catch (Exception e){
 
             }
+
         }
 
         @Override
         protected String doInBackground(String... strings) {
             String strID = (String)strings[1];
-            String strPWD = (String)strings[2];
+            String strAccount = (String)strings[2];
+            String strPIN = (String)strings[3];
+
             String severalURL = (String)strings[0];
+
 
             try{
                 URL url = new URL(severalURL);
@@ -141,9 +155,10 @@ public class LogInActivity extends AppCompatActivity{
                 serverConnection.setRequestMethod("POST");
 
                 JSONObject requestObject = new JSONObject();
-                requestObject.put("request", "sign_in");
+                requestObject.put("request", "account_associate");
                 requestObject.put("id", strID);
-                requestObject.put("password", strPWD);
+                requestObject.put("account", strAccount);
+                requestObject.put("pin_number", strPIN);
 
                 byte[] postDataBytes = requestObject.toString().getBytes("UTF-8");
 
@@ -178,19 +193,4 @@ public class LogInActivity extends AppCompatActivity{
             }
         }
     }
-
-    /*
-        HttpURLConnection serverConnection;
-        serverConnection = .........;
-        JSONObject requestObject = new JSONObject();
-        requestObject.put("type", "sign_in");
-        requestObject.put("id", $(DATA));
-        ...
-        byte[] postDataBytes = requestObject.toString().getBytes(NetworkInterface.ENCODE);
-        ...
-        serverConnection.setRequestMethod("POST");
-        serverConnection.setRequestProperty("Content-Type", "application/json");
-        serverConnection.SetDoOutput(true);
-        serverConnection.getOutputStream().write(postDataBytes);
-    */
 }
