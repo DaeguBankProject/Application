@@ -144,8 +144,8 @@ public class CheckPinActivity extends AppCompatActivity {
                 requestObject.put("request", "transaction");
                 requestObject.put("sender", strSender);
                 requestObject.put("receiver", strReceiver);
-                requestObject.put("money", money);
                 requestObject.put("pin_number", strPinNumber);
+                requestObject.put("money", money);
 
                 byte[] postDataBytes = requestObject.toString().getBytes("UTF-8");
 

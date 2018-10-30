@@ -115,6 +115,7 @@ public class LogInActivity extends AppCompatActivity{
                     goLobbyIntent.putExtra("user_type", userType);
                     goLobbyIntent.putExtra("user_account", userAccount);
                     startActivity(goLobbyIntent);
+                    finish();
                 }else{
                     Toast.makeText(LogInActivity.this, result.getString("message"), Toast.LENGTH_LONG).show();
                 }

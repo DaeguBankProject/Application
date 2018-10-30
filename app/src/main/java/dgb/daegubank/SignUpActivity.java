@@ -133,9 +133,6 @@ public class SignUpActivity extends AppCompatActivity{
             }catch (Exception e){
 
             }
-
-            finish();
-            Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT).show();
         }
 
         @Override

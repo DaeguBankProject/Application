@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 /**
  * Created by machina on 28/10/2018
  */
@@ -45,16 +47,18 @@ public class UserLobbyActivity extends AppCompatActivity{
 
         CheckAccount();
 
-        if(isAddAccount){
-            accountBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        accountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isAddAccount){
                     Intent addIntent = new Intent(UserLobbyActivity.this, AddAccountActivity.class);
                     addIntent.putExtra("userId", userId);
                     startActivityForResult(addIntent, 1);
                 }
-            });
-        }
+            }
+        });
+
 
         transactionListBtn.setOnClickListener(new View.OnClickListener() {
             @Override

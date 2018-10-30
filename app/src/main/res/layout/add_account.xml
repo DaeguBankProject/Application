@@ -36,6 +36,7 @@
             android:id="@+id/editPin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="numberPassword"
             android:hint="PIN번호"/>
     </LinearLayout>
 
@@ -47,7 +48,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberPassword"
             android:text="PIN번호를 한번 더 입력해주세요."/>
         <EditText
             android:id="@+id/editPinCheck"

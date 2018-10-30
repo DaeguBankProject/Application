@@ -120,8 +120,7 @@ public class AddAccountActivity extends AppCompatActivity{
                 String respondMsg = result.getString("respond"); //"Error" or "Success"
 
                 if(respondMsg.equals("Success")){
-                    String userAccount = result.getString("account"); // User's bank account
-
+                    userAccount = editAccount.getText().toString();
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("account", userAccount);
                     setResult(Activity.RESULT_OK, returnIntent);
