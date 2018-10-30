@@ -42,6 +42,18 @@
 
         </activity>
 
+        <activity android:name=".CheckPinActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <activity android:name=".TransactionResultActivity">
+
+        </activity>
+
     </application>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 

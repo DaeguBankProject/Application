@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 /**
  * Created by machina on 28/10/2018
  */
@@ -44,13 +43,7 @@ public class UserLobbyActivity extends AppCompatActivity{
         transactionListBtn = (Button)findViewById(R.id.listBtn);
         transactionBtn = (Button)findViewById(R.id.transactionBtn);
 
-        if(userAccount.equals("null")){
-            accountBtn.setText("+");
-            isAddAccount = true;
-        }else{
-            accountBtn.setText(userAccount);
-            isAddAccount = false;
-        }
+        CheckAccount();
 
         if(isAddAccount){
             accountBtn.setOnClickListener(new View.OnClickListener() {
@@ -81,11 +74,27 @@ public class UserLobbyActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        CheckAccount();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1){
             if(resultCode == Activity.RESULT_OK){
                 userAccount = data.getStringExtra("account");
             }
+        }
+    }
+
+    public void CheckAccount(){
+        if(userAccount.equals("null")){
+            accountBtn.setText("+");
+            isAddAccount = true;
+        }else{
+            accountBtn.setText(userAccount);
+            isAddAccount = false;
         }
     }
 }
