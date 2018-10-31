@@ -131,7 +131,7 @@ public class AddAccountActivity extends AppCompatActivity{
                 }
 
             }catch (Exception e){
-
+                e.printStackTrace();
             }
 
         }

@@ -23,7 +23,7 @@ public class UserLobbyActivity extends AppCompatActivity{
     private String userName;
     private String userType;
     private String userAccount;
-    private String storeName;
+//    private String storeName;
 
 
     private boolean isAddAccount;
@@ -38,9 +38,9 @@ public class UserLobbyActivity extends AppCompatActivity{
         userName = fromLogInIntent.getStringExtra("user_name");
         userType = fromLogInIntent.getStringExtra("user_type");
         userAccount = fromLogInIntent.getStringExtra("user_account");
-        if(userType.equals("Merchant")){
-            storeName = fromLogInIntent.getStringExtra("store_name");
-        }
+//        if(userType.equals("Merchant")){
+//            storeName = fromLogInIntent.getStringExtra("store_name");
+//        }
 
         userText = (TextView)findViewById(R.id.userName);
         userText.setText(userName);
@@ -78,9 +78,9 @@ public class UserLobbyActivity extends AppCompatActivity{
                 transactionIntent.putExtra("transaction_user_name", userName);
                 transactionIntent.putExtra("transaction_user_account", userAccount);
                 transactionIntent.putExtra("transaction_user_type", userType);
-                if(userType.equals("Merchant")){
-                    transactionIntent.putExtra("transaction_store_name", storeName);
-                }
+//                if(userType.equals("Merchant")){
+//                    transactionIntent.putExtra("transaction_store_name", storeName);
+//                }
                 startActivity(transactionIntent);
             }
         });

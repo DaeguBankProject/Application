@@ -114,10 +114,10 @@ public class LogInActivity extends AppCompatActivity{
                     goLobbyIntent.putExtra("user_name", userName);
                     goLobbyIntent.putExtra("user_type", userType);
                     goLobbyIntent.putExtra("user_account", userAccount);
-                    if(userType.equals("Merchant")){
-                        String storeName = result.getString("store_name");
-                        goLobbyIntent.putExtra("store_name", storeName);
-                    }
+//                    if(userType.equals("Merchant")){
+//                        String storeName = result.getString("store_name");
+//                        goLobbyIntent.putExtra("store_name", storeName);
+//                    }
                     startActivity(goLobbyIntent);
                     finish();
                 }else{
@@ -127,7 +127,7 @@ public class LogInActivity extends AppCompatActivity{
                 Toast.makeText(LogInActivity.this, respondMsg, Toast.LENGTH_LONG).show();
 
             }catch (Exception e){
-
+                e.printStackTrace();
             }
         }
 
