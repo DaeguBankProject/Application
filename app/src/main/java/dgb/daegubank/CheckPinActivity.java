@@ -101,7 +101,7 @@ public class CheckPinActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(getApplicationContext(), "거래 중...", null, true, true);
+            progressDialog = ProgressDialog.show(CheckPinActivity.this, "거래 중...", null, true, true);
         }
 
         @Override
@@ -117,7 +117,7 @@ public class CheckPinActivity extends AppCompatActivity {
                 if(respondMsg.equals("Success")){
                     Intent goResultIntent = new Intent(CheckPinActivity.this, TransactionResultActivity.class);
                     goResultIntent.putExtra("pin_storeName", storeName);
-                    goResultIntent.putExtra("pin_price", price);
+                    goResultIntent.putExtra("pin_price", Integer.parseInt(price));
                     startActivity(goResultIntent);
                 }else{
 
