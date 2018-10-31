@@ -30,6 +30,11 @@
             android:text="거래금액"/>
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/livTransaction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
