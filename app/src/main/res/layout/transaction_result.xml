@@ -2,36 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="30dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:orientation="vertical">
+    android:background="@drawable/paybackground"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingTop="100dp"
+    android:paddingRight="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/result_merchantTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="야시장떡볶이"/>
+            android:text="야시장떡볶이" />
+
         <TextView
             android:id="@+id/result_priceTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:text="3000원"
             android:textSize="40dp"
-            android:textStyle="bold"
-            android:text="3000원"/>
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:gravity="center"
-            android:text="송금완료"/>
+            android:text="송금완료" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,11 +43,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:gravity="center">
+
         <Button
             android:id="@+id/result_okBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="확인"/>
+            android:layout_width="150dp"
+            android:layout_height="75dp"
+            android:background="@drawable/okicon" />
     </LinearLayout>
 
 </LinearLayout>

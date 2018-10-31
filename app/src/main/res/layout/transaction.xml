@@ -2,39 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:orientation="vertical">
+    android:background="@drawable/paybackground"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingTop="110dp"
+    android:paddingRight="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="거래하실 상점명"/>
+            android:text="거래하실 상점명" />
+
         <TextView
             android:id="@+id/storeName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text=""/>
+            android:text="" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="결제하실 금액을 입력해주세요."/>
+            android:text="결제하실 금액을 입력해주세요." />
+
         <EditText
             android:id="@+id/priceEdt"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:inputType="number"/>
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
@@ -42,30 +47,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="위의 정보로 결제하시겠습니까?"/>
+            android:text="위의 정보로 결제하시겠습니까?" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/transactionOkBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="확인"/>
+            android:text="확인" />
+
         <Button
             android:id="@+id/transactionCancelBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="취소"/>
+            android:text="취소" />
     </LinearLayout>
 
 
