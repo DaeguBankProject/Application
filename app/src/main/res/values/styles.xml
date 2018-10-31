@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Nobar" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/main</item>
+    </style>
+
 </resources>

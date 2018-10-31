@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/main1copy">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,10 +31,10 @@
 
         <Button
             android:id="@+id/accountBtn"
-            android:layout_width="176dp"
-            android:layout_height="137dp"
+            android:layout_width="250dp"
+            android:layout_height="160dp"
+            android:background="@drawable/addacount"
             android:gravity="center"
-            android:text="+"
             android:textSize="40dp" />
 
     </LinearLayout>
