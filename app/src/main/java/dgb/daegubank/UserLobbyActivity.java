@@ -66,6 +66,7 @@ public class UserLobbyActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent listIntent = new Intent(UserLobbyActivity.this, TransactionListActivity.class);
+                listIntent.putExtra("user_id", userId);
                 startActivity(listIntent);
             }
         });
