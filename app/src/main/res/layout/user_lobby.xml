@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/main1copy">
 
     <LinearLayout
+        android:id="@+id/imgLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="140dp"
+            android:src="@drawable/paydgbficon1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/textLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgLayout"
         android:gravity="center">
 
         <TextView
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="           " />
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="24dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" 님 안녕하세요." />
+            android:text=" 님 안녕하세요."
+            android:textColor="#ffffff"
+            android:textSize="22dp"/>
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textLayout"
         android:gravity="center"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <Button
@@ -35,26 +55,31 @@
             android:layout_height="160dp"
             android:background="@drawable/addacount"
             android:gravity="center"
-            android:textSize="40dp" />
+            android:textSize="20dp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/listBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             android:layout_weight="1"
-            android:text="거래내역"/>
+            android:text="거래내역"
+            android:textSize="25dp"/>
+
         <Button
             android:id="@+id/transactionBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             android:layout_weight="1"
-            android:text="거래하기"/>
+            android:text="거래하기"
+            android:textSize="25dp"/>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

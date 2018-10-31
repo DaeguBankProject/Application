@@ -104,9 +104,9 @@ public class UserLobbyActivity extends AppCompatActivity{
 
     public void CheckAccount(){
         if(userAccount.equals("null")){
-            accountBtn.setText("+");
             isAddAccount = true;
         }else{
+            accountBtn.setBackgroundResource(R.drawable.mydgbbankiconcopy);
             accountBtn.setText(userAccount);
             isAddAccount = false;
         }
