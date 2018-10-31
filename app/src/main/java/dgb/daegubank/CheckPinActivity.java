@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -35,9 +37,11 @@ public class CheckPinActivity extends AppCompatActivity {
     private String storeName;
     private String customerName;
     private String pinNumber;
-    private int price;
+    private String price;
 
     private EditText pinEdt;
+    private Button okBtn;
+    private Button cancelBtn;
 
 
     @Override
@@ -45,28 +49,21 @@ public class CheckPinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pin_check);
 
-        Intent fromTransactionIntent = new Intent(this.getIntent());
+        Intent fromTransactionIntent = this.getIntent();
         storeName = fromTransactionIntent.getStringExtra("tr_store_name");
         customerName = fromTransactionIntent.getStringExtra("tr_customer_name");
         merchantId = fromTransactionIntent.getStringExtra("tr_merchant_id");
         customerId = fromTransactionIntent.getStringExtra("tr_customer_id");
-        price = fromTransactionIntent.getIntExtra("tr_price", 0);
+        price = fromTransactionIntent.getStringExtra("tr_price");
 
         pinEdt = (EditText)findViewById(R.id.inputPIN);
-        pinEdt.addTextChangedListener(new TextWatcher() {
+        okBtn = (Button)findViewById(R.id.pin_okBtn);
+        cancelBtn = (Button)findViewById(R.id.pin_cancelBtn);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                pinNumber = s.toString();
+            public void onClick(View v) {
+                pinNumber = pinEdt.getText().toString();
 
                 try {
                     MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -84,7 +81,15 @@ public class CheckPinActivity extends AppCompatActivity {
                     return;
                 }
                 sendTransactionInfo task = new sendTransactionInfo();
-                task.execute(SERVER_ADDRESS, customerId, merchantId, String.valueOf(price), pinNumber);
+
+                task.execute(SERVER_ADDRESS, customerId, merchantId, price, pinNumber);
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -108,7 +113,6 @@ public class CheckPinActivity extends AppCompatActivity {
             try{
                 JSONObject result = new JSONObject(s);
                 String respondMsg = result.getString("respond");
-                String resultMsg = result.getString("message");
 
                 if(respondMsg.equals("Success")){
                     Intent goResultIntent = new Intent(CheckPinActivity.this, TransactionResultActivity.class);

@@ -139,8 +139,9 @@ public class QRcodeActivity extends AppCompatActivity {
             try{
                 JSONObject result = new JSONObject(s);
                 String respondMsg = result.getString("respond");
-                String resultMsg = result.getString("message");
-                if(userType.equals("Customer")){
+                //String resultMsg = result.getString("message");
+
+                if(respondMsg.equals("Success") && userType.equals("Customer")){
                     String store = result.getString("store_name");
 
                     Intent goTransaction = new Intent(QRcodeActivity.this, TransactionActivity.class);
@@ -149,6 +150,7 @@ public class QRcodeActivity extends AppCompatActivity {
                     goTransaction.putExtra("qr_store_name", store);
                     goTransaction.putExtra("qr_customer_name", userName);
                     startActivity(goTransaction);
+                    finish();
                 }
             }catch (Exception e){
                 e.printStackTrace();

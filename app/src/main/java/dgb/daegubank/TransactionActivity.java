@@ -33,7 +33,7 @@ public class TransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction);
 
-        Intent fromQRIntent = new Intent(this.getIntent());
+        Intent fromQRIntent = this.getIntent();
         storeName = fromQRIntent.getStringExtra("qr_store_name");
         customerName = fromQRIntent.getStringExtra("qr_customer_name");
         merchantId = fromQRIntent.getStringExtra("qr_merchant_id");
@@ -57,7 +57,7 @@ public class TransactionActivity extends AppCompatActivity {
                     goCheckPinIntent.putExtra("tr_customer_name", customerName);
                     goCheckPinIntent.putExtra("tr_merchant_id", merchantId);
                     goCheckPinIntent.putExtra("tr_customer_id", customerId);
-                    goCheckPinIntent.putExtra("tr_price", price);
+                    goCheckPinIntent.putExtra("tr_price", priceStr.getText().toString());
                     startActivity(goCheckPinIntent);
                     finish();
                 }
