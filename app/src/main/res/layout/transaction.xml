@@ -33,7 +33,8 @@
         <EditText
             android:id="@+id/priceEdt"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:inputType="number"/>
     </LinearLayout>
 
     <LinearLayout
