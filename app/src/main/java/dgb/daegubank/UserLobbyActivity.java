@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by machina on 28/10/2018
@@ -24,6 +23,8 @@ public class UserLobbyActivity extends AppCompatActivity{
     private String userName;
     private String userType;
     private String userAccount;
+    private String storeName;
+
 
     private boolean isAddAccount;
 
@@ -37,6 +38,9 @@ public class UserLobbyActivity extends AppCompatActivity{
         userName = fromLogInIntent.getStringExtra("user_name");
         userType = fromLogInIntent.getStringExtra("user_type");
         userAccount = fromLogInIntent.getStringExtra("user_account");
+        if(userType.equals("Merchant")){
+            storeName = fromLogInIntent.getStringExtra("store_name");
+        }
 
         userText = (TextView)findViewById(R.id.userName);
         userText.setText(userName);
@@ -46,7 +50,6 @@ public class UserLobbyActivity extends AppCompatActivity{
         transactionBtn = (Button)findViewById(R.id.transactionBtn);
 
         CheckAccount();
-
 
         accountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +62,6 @@ public class UserLobbyActivity extends AppCompatActivity{
             }
         });
 
-
         transactionListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +73,14 @@ public class UserLobbyActivity extends AppCompatActivity{
         transactionBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent transactionIntent = new Intent(UserLobbyActivity.this, MainActivity.class);
+                Intent transactionIntent = new Intent(UserLobbyActivity.this, QRcodeActivity.class);
+                transactionIntent.putExtra("transaction_user_id", userId);
+                transactionIntent.putExtra("transaction_user_name", userName);
+                transactionIntent.putExtra("transaction_user_account", userAccount);
+                transactionIntent.putExtra("transaction_user_type", userType);
+                if(userType.equals("Merchant")){
+                    transactionIntent.putExtra("transaction_store_name", storeName);
+                }
                 startActivity(transactionIntent);
             }
         });

@@ -26,8 +26,8 @@ public class TransactionResultActivity extends AppCompatActivity{
         setContentView(R.layout.transaction_result);
 
         Intent fromCheckPinIntent = new Intent(this.getIntent());
-        merchantName = fromCheckPinIntent.getStringExtra("storeName");
-        price = fromCheckPinIntent.getIntExtra("price", 0);
+        merchantName = fromCheckPinIntent.getStringExtra("pin_storeName");
+        price = fromCheckPinIntent.getIntExtra("pin_price", 0);
 
         merchantTxt = (TextView)findViewById(R.id.result_merchantTxt);
         priceTxt = (TextView)findViewById(R.id.result_priceTxt);

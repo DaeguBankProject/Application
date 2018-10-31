@@ -30,8 +30,10 @@ public class CheckPinActivity extends AppCompatActivity {
     private static final String SERVER_ADDRESS = "http://capstone.gonetis.com/daegubank/server.php";
     private HttpURLConnection serverConnection;
 
-    private String merchant;
-    private String customer;
+    private String merchantId;
+    private String customerId;
+    private String storeName;
+    private String customerName;
     private String pinNumber;
     private int price;
 
@@ -44,9 +46,11 @@ public class CheckPinActivity extends AppCompatActivity {
         setContentView(R.layout.pin_check);
 
         Intent fromTransactionIntent = new Intent(this.getIntent());
-        merchant = fromTransactionIntent.getStringExtra("merchant_name");
-        customer = fromTransactionIntent.getStringExtra("customer_name");
-        price = fromTransactionIntent.getIntExtra("price", 0);
+        storeName = fromTransactionIntent.getStringExtra("tr_store_name");
+        customerName = fromTransactionIntent.getStringExtra("tr_customer_name");
+        merchantId = fromTransactionIntent.getStringExtra("tr_merchant_id");
+        customerId = fromTransactionIntent.getStringExtra("tr_customer_id");
+        price = fromTransactionIntent.getIntExtra("tr_price", 0);
 
         pinEdt = (EditText)findViewById(R.id.inputPIN);
         pinEdt.addTextChangedListener(new TextWatcher() {
@@ -80,7 +84,7 @@ public class CheckPinActivity extends AppCompatActivity {
                     return;
                 }
                 sendTransactionInfo task = new sendTransactionInfo();
-                task.execute(SERVER_ADDRESS, customer, merchant, String.valueOf(price), pinNumber);
+                task.execute(SERVER_ADDRESS, customerId, merchantId, String.valueOf(price), pinNumber);
             }
         });
     }
@@ -108,8 +112,8 @@ public class CheckPinActivity extends AppCompatActivity {
 
                 if(respondMsg.equals("Success")){
                     Intent goResultIntent = new Intent(CheckPinActivity.this, TransactionResultActivity.class);
-                    goResultIntent.putExtra("storeName", merchant);
-                    goResultIntent.putExtra("price", price);
+                    goResultIntent.putExtra("pin_storeName", storeName);
+                    goResultIntent.putExtra("pin_price", price);
                     startActivity(goResultIntent);
                 }else{
 

@@ -7,9 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,11 +31,13 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class SignUpActivity extends AppCompatActivity{
+    private LinearLayout storeNameLayout;
     private EditText editID;
     private EditText editPWD;
     private EditText editPWDcheck;
     private EditText editName;
     private Spinner userTypeSpinner;
+    private EditText editStoreName;
 
     private Button completeButton;
     private Button cancelButton;
@@ -46,10 +50,13 @@ public class SignUpActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
 
+        storeNameLayout = (LinearLayout) findViewById(R.id.storeNameLayout);
+
         editID = (EditText)findViewById(R.id.inputID);
         editPWD = (EditText)findViewById(R.id.inputPwd);
         editPWDcheck = (EditText)findViewById(R.id.inputPwdCheck);
         editName = (EditText)findViewById(R.id.inputName);
+        editStoreName = (EditText)findViewById(R.id.inputStoreName);
 
         completeButton  = (Button)findViewById(R.id.completeBtn);
         cancelButton = (Button)findViewById(R.id.cancelBtn);
@@ -60,15 +67,32 @@ public class SignUpActivity extends AppCompatActivity{
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userTypeSpinner.setAdapter(adapter);
 
+        userTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if(userTypeSpinner.getSelectedItem().toString().equals("상인")){
+                    storeNameLayout.setVisibility(View.VISIBLE);
+                }else{
+                    storeNameLayout.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String idStr = editID.getText().toString();
                 String pwdStr = editPWD.getText().toString();
-
                 String pwdStrCheck = editPWDcheck.getText().toString();
                 String nameStr = editName.getText().toString();
                 String userTypeStr = userTypeSpinner.getSelectedItem().toString();
+                String storeStr = editStoreName.getText().toString();
 
                 if(!idStr.equals("") && !nameStr.equals("") && pwdStr.equals(pwdStrCheck)){
                     try {
@@ -87,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity{
                         return;
                     }
                     sendSignUpInfo task = new sendSignUpInfo();
-                    task.execute(SERVER_ADDRESS, idStr, pwdStr, nameStr, userTypeStr);
+                    task.execute(SERVER_ADDRESS, idStr, pwdStr, nameStr, userTypeStr, storeStr);
                 }else{
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT);
                 }
@@ -101,6 +125,8 @@ public class SignUpActivity extends AppCompatActivity{
             }
         });
     }
+
+
 
     class sendSignUpInfo extends AsyncTask<String, Void, String>{
 
@@ -141,6 +167,7 @@ public class SignUpActivity extends AppCompatActivity{
             String strPWD = (String)strings[2];
             String strName = (String)strings[3];
             int strUserType = strings[4].equals("상인")? 1 : 0;
+            String strStore = (String)strings[5];
 
             String severalURL = (String)strings[0];
 
@@ -159,6 +186,7 @@ public class SignUpActivity extends AppCompatActivity{
                 requestObject.put("password", strPWD);
                 requestObject.put("name", strName);
                 requestObject.put("type", strUserType);
+                requestObject.put("store_name", strStore);
 
                 byte[] postDataBytes = requestObject.toString().getBytes("UTF-8");
 
